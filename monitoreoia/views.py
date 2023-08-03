@@ -27,9 +27,11 @@ class minitoringLogin:
                 password = request.POST.get('password')
                 print(password)
                 user = authenticate(request, username=username, password=password)
+
+                context = {'contenido': username}
                 if user is not None:
                     login(request, user)
-                    return render(request, 'home.html')
+                    return render(request, 'home.html', context)
                 else:
                     #messages.error(request, 'Nombre de usuario o contraseña incorrectos.')
                     messages.warning(request, 'You must load a file with a .txt extension Ex: GE21-RO-M2-0008_20210916_11-02.txt ')
