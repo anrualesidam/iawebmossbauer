@@ -25,6 +25,8 @@ SECRET_KEY = 'django-insecure-wb1!&-fwdvb4=+ulsvhj8ru%tjmtz^fc!ek%x92%hspl&i-^nb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+AUTH_USER_MODEL = 'monitoreoia.CustomUser'
+
 ALLOWED_HOSTS = []
 
 
@@ -37,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'monitoreoia'
 ]
 
 MIDDLEWARE = [
@@ -111,6 +114,15 @@ USE_I18N = True
 
 USE_TZ = True
 
+
+#Email
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Cambia esto por la dirección del servidor de correo saliente (SMTP)
+EMAIL_PORT = 587  # Cambia esto al puerto correcto para el servidor de correo saliente
+EMAIL_USE_TLS = True 
+EMAIL_HOST_USER = 'monitoringgem@gmail.com'  # Cambia esto al nombre de usuario o dirección de correo electrónico para autenticarse en el servidor de correo
+EMAIL_HOST_PASSWORD = 'drqkarbmscwwfmwd'  # Cambia esto a tu contraseña para autenticarse en el servidor de correo
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

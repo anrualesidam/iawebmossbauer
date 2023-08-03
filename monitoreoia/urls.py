@@ -15,10 +15,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+
+from .views import minitoringLogin,Home
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('monitoreoia.urls'))
+    path('', minitoringLogin().login, name="baselogin"),
+    path('contact/', minitoringLogin().contac, name='contact'),
+    path('home/', Home().home, name='home'),
+    path('contactin/', Home().contactin, name='contactin'),
+
 ]
