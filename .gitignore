@@ -1,2 +1,5 @@
 venv/
 __pycache__/
+
+add_user.txt
+list_user.txt
