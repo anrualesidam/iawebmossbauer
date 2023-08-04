@@ -11,6 +11,11 @@ from django.shortcuts import redirect
 from django.utils.html import strip_tags
 from urllib.parse import unquote
 
+import firebase_admin
+from firebase_admin import credentials, db
+from django.shortcuts import render
+import os
+
 #emails
 import string
 
@@ -111,3 +116,27 @@ class Home:
                     return render(request, "confirmation_send_emailin.html")
            else:
                 return render(request, "contactin.html")
+
+class database:
+    def search_view(self,request):
+        if request.method == 'GET':
+            search_query = request.GET.get('q')
+            if search_query:
+                # Initialize Firebase with your credentials
+                #cred = credentials.Certificate("./static/config/firebase_credencials.json")
+                cred = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config', "./static/config/firebase_credencials.json")
+                firebase_admin.initialize_app(cred, {'databaseURL': 'https://radiacion-c50d8.firebaseio.com/'})
+                print("print aaa",cred)
+                # Perform the search query in Firebase Realtime Database
+                ref = db.reference('/your-data-node')  # Replace with your data node
+                results = ref.order_by_child('name').equal_to(search_query).get()
+
+                # Process the results and return them to the template
+                return render(request, 'search_results.html', {'results': results})
+
+        return render(request, 'search_espectral.html')
+
+
+class iaMossbauer:
+    def modelIa(self,request):
+        return render(request, 'iamossbauer.html')
