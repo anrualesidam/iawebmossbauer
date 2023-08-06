@@ -13,14 +13,23 @@ from urllib.parse import unquote
 
 import firebase_admin
 from firebase_admin import credentials, db
+
+
 from django.shortcuts import render
 import os
 
 #emails
 import string
+import json
 
 # Create your views here.
 
+
+url = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/config/prueba.json")
+cred = credentials.Certificate(url)
+firebase_admin.initialize_app(cred, {
+    'databaseURL': "https://radiacion-c50d8.firebaseio.com"
+})
 
 class minitoringLogin:        
 
@@ -28,9 +37,9 @@ class minitoringLogin:
             if request.method == 'POST':
 
                 username = request.POST.get('username')
-                print(username)
+           
                 password = request.POST.get('password')
-                print(password)
+            
                 user = authenticate(request, username=username, password=password)
 
                 context = {'contenido': username}
@@ -119,22 +128,33 @@ class Home:
 
 class database:
     def search_view(self,request):
-        if request.method == 'GET':
-            search_query = request.GET.get('q')
-            if search_query:
-                # Initialize Firebase with your credentials
-                #cred = credentials.Certificate("./static/config/firebase_credencials.json")
-                cred = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config', "./static/config/firebase_credencials.json")
-                firebase_admin.initialize_app(cred, {'databaseURL': 'https://radiacion-c50d8.firebaseio.com/'})
-                print("print aaa",cred)
-                # Perform the search query in Firebase Realtime Database
-                ref = db.reference('/your-data-node')  # Replace with your data node
-                results = ref.order_by_child('name').equal_to(search_query).get()
+        print("print aaa",url)
+        ref = db.reference('database')
+        data=ref.child('1').get()
+        
+        options =list(data.keys())
 
-                # Process the results and return them to the template
-                return render(request, 'search_results.html', {'results': results})
+        data_points = []
 
-        return render(request, 'search_espectral.html')
+        if request.method == 'POST':
+            selected_option = request.POST.get('selected_option')
+            data_vale=[int(number) for number in data[selected_option].split(",")]
+            for i in range(len(data_vale)):
+                 data_points.append({"x":i+1,"y":data_vale[i]})
+            print(selected_option,data_vale)
+        else:
+            selected_option = options[0]
+            data_vale=[int(number) for number in data[selected_option].split(",")]
+            for i in range(len(data_vale)):
+                 data_points.append({"x":i+1,"y":data_vale[i]})
+        
+                
+            
+        return render(request, 'search_espectral.html',{'options': options, 
+                                                        'selected_option': selected_option,
+                                                        'data': data_points,
+                                                        'dataspectral':data_vale,
+                                                        'selectoption':[selected_option]})
 
 
 class iaMossbauer:
