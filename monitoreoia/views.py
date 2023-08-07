@@ -36,19 +36,19 @@ class minitoringLogin:
     def login(self,request):            
             if request.method == 'POST':
 
-                username = request.POST.get('username')
+                self.username = request.POST.get('username')
            
-                password = request.POST.get('password')
+                self.password = request.POST.get('password')
             
-                user = authenticate(request, username=username, password=password)
+                user = authenticate(request, username=self.username, password=self.password)
 
-                context = {'contenido': username}
+                context = {'contenido': self.username}
                 if user is not None:
                     login(request, user)
                     return render(request, 'home.html', context)
                 else:
                     #messages.error(request, 'Nombre de usuario o contraseña incorrectos.')
-                    messages.warning(request, 'You must load a file with a .txt extension Ex: GE21-RO-M2-0008_20210916_11-02.txt ')
+                    messages.warning(request, 'Incorrect password or user name, please check! ')
                     return render(request, 'alert_nofile.html')
             
             return render(request, 'login.html')
@@ -128,7 +128,6 @@ class Home:
 
 class database:
     def search_view(self,request):
-        print("print aaa",url)
         ref = db.reference('database')
         data=ref.child('1').get()
         
@@ -148,7 +147,7 @@ class database:
             for i in range(len(data_vale)):
                  data_points.append({"x":i+1,"y":data_vale[i]})
         
-                
+        
             
         return render(request, 'search_espectral.html',{'options': options, 
                                                         'selected_option': selected_option,
