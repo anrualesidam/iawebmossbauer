@@ -54,14 +54,6 @@
         <div class="chart-container">
           <canvas id="myChart"></canvas>
         </div>   
-                 
-          
-          
-     
-        
-
-      
-        
       
   
       <script>
@@ -70,13 +62,12 @@
   
           // Datos del gráfico
           var data = {{ data|safe }};
+          
 
           function objectToString(obj) {
             var str = JSON.stringify(obj);
             return str.replace("_", '');
         }
-
-          console.log(data);
   
           // Crear el gráfico
           var myChart = new Chart(ctx, {
