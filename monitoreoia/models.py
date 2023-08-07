@@ -1,6 +1,11 @@
 from django.contrib.auth.models import AbstractUser
-from django.conf import settings
+from django.db import models
+from .managers import CustomUserManager
 
 class CustomUser(AbstractUser):
-    # Custom fields and methods if needed
-    pass
+    # Your custom fields go here
+    objects = CustomUserManager()
+
+
+
+

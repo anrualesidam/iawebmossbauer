@@ -22,17 +22,19 @@ import os
 import string
 import json
 
+from django.contrib.auth import get_user_model
+from monitoreoia.models import CustomUser 
+
 # Create your views here.
 
 
-url = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/config/prueba.json")
+url = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static/config/firebasekey.json")
 cred = credentials.Certificate(url)
 firebase_admin.initialize_app(cred, {
     'databaseURL': "https://radiacion-c50d8.firebaseio.com"
 })
 
-class minitoringLogin:        
-
+class minitoringLogin:
     def login(self,request):            
             if request.method == 'POST':
 
@@ -45,6 +47,7 @@ class minitoringLogin:
                 context = {'contenido': self.username}
                 if user is not None:
                     login(request, user)
+                    request.session['minitoring_username'] = self.username
                     return render(request, 'home.html', context)
                 else:
                     #messages.error(request, 'Nombre de usuario o contraseña incorrectos.')
@@ -128,32 +131,73 @@ class Home:
 
 class database:
     def search_view(self,request):
+        # Datbase
+
         ref = db.reference('database')
-        data=ref.child('1').get()
-        
-        options =list(data.keys())
 
-        data_points = []
 
-        if request.method == 'POST':
-            selected_option = request.POST.get('selected_option')
-            data_vale=[int(number) for number in data[selected_option].split(",")]
-            for i in range(len(data_vale)):
-                 data_points.append({"x":i+1,"y":data_vale[i]})
-            print(selected_option,data_vale)
-        else:
-            selected_option = options[0]
-            data_vale=[int(number) for number in data[selected_option].split(",")]
-            for i in range(len(data_vale)):
-                 data_points.append({"x":i+1,"y":data_vale[i]})
-        
-        
-            
-        return render(request, 'search_espectral.html',{'options': options, 
-                                                        'selected_option': selected_option,
-                                                        'data': data_points,
-                                                        'dataspectral':data_vale,
-                                                        'selectoption':[selected_option]})
+        #name user
+        minitoring_username = request.session.get('minitoring_username')
+       
+
+        if minitoring_username:
+            User = get_user_model()
+            options=list([])
+            try:
+                user = CustomUser.objects.get(username=minitoring_username)
+                user_id_to_delete = user.id
+                
+
+
+                data=ref.child(str(user_id_to_delete)).get()
+                try:
+                     options =list(data.keys())
+                except:
+                     options=list([])
+                     
+
+                data_points = []
+                selected_option = ""
+                data_vale=[]
+                if request.method == 'POST':
+                    
+                    try:
+                        selected_option = request.POST.get('selected_option')
+                        datal=data[selected_option]
+                        primer_elemento = next(iter(datal.items()))
+                        clave, valor = primer_elemento
+                        
+
+                        data_vale=[int(number) for number in valor.split(",")]
+                        for i in range(len(data_vale)):
+                            data_points.append({"x":i+1,"y":data_vale[i]})
+                    except:
+                         pass
+                    
+                
+                else:
+                    
+                    try:
+                        selected_option = options[0]
+                        datal=data[selected_option]
+                        primer_elemento = next(iter(datal.items()))
+                        clave, valor = primer_elemento
+                        
+
+                        data_vale=[int(number) for number in valor.split(",")]
+                        for i in range(len(data_vale)):
+                            data_points.append({"x":i+1,"y":data_vale[i]})
+                    except:
+                         pass 
+                
+            except User.DoesNotExist:
+                print("User with the specified email does not exist.")
+           
+            return render(request, 'search_espectral.html',{'options': options, 
+                                                            'selected_option': selected_option,
+                                                            'data': data_points,
+                                                            'dataspectral':data_vale,
+                                                            'selectoption':[selected_option]})
 
 
 class iaMossbauer:
