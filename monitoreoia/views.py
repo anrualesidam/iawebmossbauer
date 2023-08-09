@@ -14,6 +14,14 @@ from urllib.parse import unquote
 import firebase_admin
 from firebase_admin import credentials, db
 
+# Tensorflow IA
+from django.core.files.storage import FileSystemStorage
+from django.utils.datastructures import MultiValueDictKeyError
+from django.conf import settings
+
+import tensorflow as tf
+import numpy as np
+
 
 from django.shortcuts import render
 import os
@@ -198,8 +206,48 @@ class database:
                                                             'data': data_points,
                                                             'dataspectral':data_vale,
                                                             'selectoption':[selected_option]})
-
+class CustomFileSystemStorage(FileSystemStorage):
+    def get_available_name(self, name, max_length=None):
+        self.delete(name)
+        return name
 
 class iaMossbauer:
     def modelIa(self,request):
-        return render(request, 'iamossbauer.html')
+
+        message = ""
+        prediction = ""
+        fss = CustomFileSystemStorage()
+        try:
+            # Load Model
+            model = tf.keras.models.load_model(
+                 os.getcwd() + os.path.join(os.sep, "model", "Mossbauer_model.h5")
+            )
+
+            spectrum = request.FILES["file"]
+            print("Name", spectrum.file)
+            _spectrum = fss.save(spectrum.name, spectrum)
+            path = str(settings.MEDIA_ROOT) + "/" + spectrum.name
+            # read the spectrum
+            spec_ = -np.loadtxt(path, dtype=float)[:, 1] / 10
+            spec_ = spec_.tolist()
+
+            spectrum_pred = [spec_]
+            print(spectrum_pred)
+            categ = ["Otro", "Hematita", "Magnetita"]
+            result = np.argmax(model.predict(spectrum_pred), axis=-1)
+
+            print("Prediction: " + str(np.argmax(result)))
+
+            prediction = categ[result[0]]
+
+
+            return render(request, 'iamossbauer.html', {
+                "message": message,
+                "spectrum": spectrum_pred,
+                "prediction": prediction
+            })
+        
+        except MultiValueDictKeyError:
+            return render(request, 'iamossbauer.html', {
+                "message": "No File Selected"
+            })

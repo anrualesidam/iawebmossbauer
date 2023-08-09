@@ -3,3 +3,6 @@ __pycache__/
 
 add_user.txt
 list_user.txt
+data/
+media/
+__pycache__/
