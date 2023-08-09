@@ -156,7 +156,7 @@ class database:
                      options=list(["None"])
                      
 
-                data_points = [{"x":0,"y":0}]
+                data_points = []
                 selected_option = ""
                 data_vale=[]
                 if request.method == 'POST':
@@ -172,6 +172,7 @@ class database:
                         for i in range(len(data_vale)):
                             data_points.append({"x":i+1,"y":data_vale[i]})
                     except:
+                         data_points = [{"x":0,"y":0}]
                          pass
                     
                 
@@ -188,6 +189,7 @@ class database:
                         for i in range(len(data_vale)):
                             data_points.append({"x":i+1,"y":data_vale[i]})
                     except:
+                         data_points = [{"x":0,"y":0}]
                          pass 
                 
             except User.DoesNotExist:
