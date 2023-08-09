@@ -1,35 +1,263 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block stilo %}
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+
+  .column {
+    flex: 1;
+    padding: 20px;
+  }
+  .column img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+</style>
+
+{% endblock %} 
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center">
-    <h2 class="mb-3">Welcome, {{ request.user.username }}!</h2>
+
+
+<div class="d-flex justify-content-center align-items-center containernew">
+  <h2 class="mb-3">Welcome, {{ request.user.username }}!</h2>
 </div>
 
-<div class="d-flex justify-content-center align-items-center">
-    <div>      
-    
-    </div>
-    
-</div>
 
-<h1 class="text-center">Plot</h1>
+
+<div class="d-flex justify-content-center align-items-center">
+  {% csrf_token %}
+  <div style="  text-align: justify;
+  width: 100%; 
+  max-width: 800px; 
+  height: 800%;
+  margin:0 auto;
+  padding: 20px;">
+    <p style="font-size: 18px;">This is a specialized platform for the analysis of Mossbauer spectral 
+      data based on artificial intelligence (AI). It was developed by the Solid State group and 
+      the Scientific Instrumentation and Microelectronics group of the University of Antioquia. 
+      It has a real-time link-up to the Mossbauer Spectrometer located at the 
+      Sede de Investigación
+      Universitaria(<a href="https://www.udea.edu.co/wps/portal/udea/web/inicio/investigacion/sede-investigacion-universitaria" target="_blank">SIU</a>).This 
+      allows customized remote access to the experiments performed on the Mossbauer Spectrometer.</p>
+  </div>
+</div>
 
 <div class="container text-center">
+  <div class="row align-items-start" style="background-color: #f5f5f5;">
+    <h1 style="font-weight: bold;">Research Groups</h1>
+    <div style="display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;">
+    
+      <div class="column">
+        <a  style="text-decoration: none" href="https://www.udea.edu.co/wps/portal/udea/web/inicio/investigacion/grupos-investigacion/ciencias-naturales-exactas/instrumentacion-cientifica-microelectronica" target="_blank">
+
+        <h4 style="font-weight: bold; color: rgb(21, 111, 21);">Scientific Instrumentation and <br> Microelectronics Group</h4>
+
+        </a>
+        <a href="https://www.udea.edu.co/wps/portal/udea/web/inicio/investigacion/grupos-investigacion/ciencias-naturales-exactas/instrumentacion-cientifica-microelectronica" target="_blank">
+          <img src="{% static 'images/instugroup.jpg' %}" alt="Imagen 1">
+
+        </a>
+        
+        
+        <p style="  text-align: justify;">The Scientific Instrumentation and Microelectronics Research Group (GICM) of the University of Antioquia was created in January 1982. 
+          was created in January 1982, with the objective of designing, building and adapting technologies for use in measurement and research systems. 
+          for use in measurement and research systems.</p>
+        
+        <h2 style="font-weight: bold; color: rgb(21, 111, 21);text-align: left;">Vision</h2>
+        <p style="  text-align: justify;">
+         
+            To be a nationally recognized group for the development of innovative instruments for the measurement and control of physical variables. 
+            To contribute to the training of professionals in this area through elective courses and direction of undergraduate and graduate
+            of undergraduate and graduate theses.
+            After five years, it is intended to have a bank of open software and hardware solutions to be applied immediately in common measurements 
+            of optics, characterization of electrical and thermal variables, spectroscopy, Mössbauer spectroscopy, magnetic properties and other applications.
+            Mössbauer spectroscopy, magnetic properties, etc.
+            To have publications in medium and high impact international journals that support the research and contributions achieved by the Group....
+            <a href="https://www.udea.edu.co/wps/portal/udea/web/inicio/investigacion/grupos-investigacion/ciencias-naturales-exactas/instrumentacion-cientifica-microelectronica" target="_blank">
+              see more.
+            </a>
+        </p>
+      </div>
+      
+      <div class="column">
+        <a  style="text-decoration: none" href="https://www.udea.edu.co/wps/portal/udea/web/inicio/investigacion/grupos-investigacion/ciencias-naturales-exactas/ges" target="_blank">
+          <h4 style="font-weight: bold;color: rgb(21, 111, 21);">Solid State <br> Group</h4>
+        </a>
+        
+        <a href="https://www.udea.edu.co/wps/portal/udea/web/inicio/investigacion/grupos-investigacion/ciencias-naturales-exactas/ges" target="_blank">
+          <img src="{% static 'images/GESgroup.jpg' %}"  alt="Imagen 2">
+
+        </a>
+        
+        <p style="  text-align: justify;">Our group works to develop research in condensed matter and to 
+          irrigate its results in teaching, industry and society in general. The Solid State group was created,
+           during the first semester of 1972, by Dr. Fred Ferate, professor of the Physics Department, 
+           who promoted the creation of this line of work.</p>
+        
+        <h2 style="font-weight: bold; color: rgb(21, 111, 21);text-align: left;">Vision</h2>
+        <p style="  text-align: justify;">
+         
+          In the next few years the group will have improved the methods of synthesis of iron oxides,
+           magnetic semiconductor oxides, pure and doped manganese and titanium, which it currently uses, 
+           and in this way will be presenting more complete and in-depth studies on their electrical and magnetic 
+           properties. Studies on obtaining and characterizing thin films of iron oxides, magnetic semiconductor oxides,
+            titanium dioxide, manganites, thermoelectrics and epitaxial and amorphous titanium nitride will have been improved,
+             and corrosion experiments on such films will have been carried out to deepen the understanding of corrosion,
+              protection and storage processes. New applications of these films will also be sought....
+              <a href="https://www.udea.edu.co/wps/portal/udea/web/inicio/investigacion/grupos-investigacion/ciencias-naturales-exactas/ges" target="_blank">
+                see more.
+              </a>
+        </p>
+      </div>
+
+  </div>
+
+  </div>
+
+  <div class="container text-center">
     <div class="row align-items-start">
-      <div class="col">
-        
-        <img src="data:image/jpeg;base64,{{ img_path }}" alt="Plot" class="img-fluid">
-      </div>
-      <div class="col">
-        
-        <img src="data:image/jpeg;base64,{{ img_ping }}" alt="Plot" class="img-fluid"> 
-      </div>
+      <div style="display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      margin-top: 20px;">
+    </div>
+    </div>
+  
+  
+  </div>
+
+
+
+  <div class="container text-center">
+    <div class="row align-items-start" style="background-color: #f5f5f5;">
+      <h1 style="font-weight: bold;">Research participants</h1>
+      <div style="display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      margin-top: 20px;">
+
+          
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="circle-image">
+                  <img src="{% static 'images/teamges/cesar.png' %}" alt="Imagen 1">
+                </div>
+                <div class="description">
+                  <p><strong>GES Coordinator: </strong><b>Cesar Augusto <br> Barrero Meneses</b>
+                    <br>
+                    Ph.D. in Physics<br>
+                    cesar.barrero@udea.edu.co
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="circle-image">
+                  <img src="{% static 'images/teamgis/JaimeOsorio.png'%}" alt="Imagen 2" style="width: 200px; height: 200px;">
+                </div>
+                <div class="description">
+                  <p><strong>GICM Coordinator: </strong><b>Jaime Alberto <br> Osorio Vélez</b>
+                    <br>
+                    Ph.D. in Physics<br>
+                    jaime.osorio@udea.edu.co
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="circle-image">
+                  <img src="{% static 'images/teamgis/alexis.png'%}" alt="Imagen 3" style="width: 200px; height: 200px;">
+                </div>
+                <div class="description">
+                  <p><strong></strong><b>Anderson Alexis <br> Ruales Barbosa</b>
+                    <br>
+                    PhD(c) in Physics<br>
+                    anderson.ruales@udea.edu.co
+                  </p>
+                </div>
+              </div>
+            </div>
+
 
     </div>
 
+    <div style="display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;">
+   
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="circle-image">
+                <img src="{% static 'images/teamgis/fabian.png'%}" alt="Imagen 4" style="width: 200px; height: 200px;">
+              </div>
+              <div class="description">
+                <p><strong></strong><b>Fabian Andrés Castaño Usuga</b>
+                  <br>
+                  Ph.D. in Physics<br>
+                  fabian.castano@udea.edu.co
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="circle-image">
+                <img src="{% static 'images/teamgis/felipe.png'%}" alt="Imagen 5" style="width: 200px; height: 200px;">
+              </div>
+              <div class="description">
+                <p><strong></strong><b>Felipe <br> Ramírez  </b>
+                  <br>
+                  PhD(c) in Physics<br>
+                  luisf.ramirez@udea.edu.co
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="circle-image">
+                <img src="{% static 'images/image3.jpg' %}" alt="Imagen 3">
+              </div>
+              <div class="description">
+                Colocar a otros investigadores
+              </div>
+            </div>
+          </div>
+
+
   </div>
+
+
+    </div>
+  
+  
+  </div>
+
+  
+  
+<div class="container text-center">
+  <div class="row align-items-start">
+    <div style="display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;">
+  </div>
+  </div>
+
+
+</div>
+
+
+
+
+
+
 <!--<div style="height: 30%; width: 30%;">
     <img src="data:image/jpeg;base64,{{ img_path }}" alt="Plot" class="img-fluid">
     <img src="data:image/jpeg;base64,{{ img_ping }}" alt="Plot" class="img-fluid">

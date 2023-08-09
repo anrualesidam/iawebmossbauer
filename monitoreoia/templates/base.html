@@ -17,12 +17,31 @@
 
   <link rel="stylesheet" href="{% static 'bootstrap/css/style.css' %}">
 
-  <style>
-    @import url("{% static 'bootstrap/css/style.css' %}");
-  </style>
+    <style>
+        @import url("{% static 'bootstrap/css/style.css' %}");   
+
+
+      </style>
+      {% block stilo %}
+      {% endblock %} 
 </head>
 
 <body>
+  
+        <!-- Aquí va el contenido del header -->
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom" >
+            <div class="container">
+                <!-- Sección de marca -->
+                <a class="navbar-brand">
+                  <a class="navbar-brand" href="https://www.udea.edu.co/" target="_blank">
+                    <img src="{% static 'images/logo-udea.jpg' %}" width="60" height="60" class="d-inline-block align-top img-fluid" alt="">  
+                  </a>
+                  <a class="navbar-brand" href="https://www.udea.edu.co/wps/portal/udea/web/inicio/investigacion/grupos-investigacion/ciencias-naturales-exactas/instrumentacion-cientifica-microelectronica" target="_blank">                  
+                    <img src="{% static 'images/LogoGICM.jpg' %}" width="85" height="60" class="d-inline-block align-top img-fluid" alt="">
+                  </a>
+                  <a class="navbar-brand" href="https://www.udea.edu.co/wps/portal/udea/web/inicio/investigacion/grupos-investigacion/ciencias-naturales-exactas/ges" target="_blank">                  
+                    <img src="{% static 'images/logoestadosolido.png' %}" width="120" height="60" class="d-inline-block align-top img-fluid" alt="">
+                  </a>
 
   <!-- Aquí va el contenido del header -->
   <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
