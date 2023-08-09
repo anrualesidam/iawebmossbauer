@@ -142,7 +142,7 @@ class database:
 
         if minitoring_username:
             User = get_user_model()
-            options=list([])
+            options=list(["None"])
             try:
                 user = CustomUser.objects.get(username=minitoring_username)
                 user_id_to_delete = user.id
@@ -153,10 +153,10 @@ class database:
                 try:
                      options =list(data.keys())
                 except:
-                     options=list([])
+                     options=list(["None"])
                      
 
-                data_points = []
+                data_points = [{"x":0,"y":0}]
                 selected_option = ""
                 data_vale=[]
                 if request.method == 'POST':
