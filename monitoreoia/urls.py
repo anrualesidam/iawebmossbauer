@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from .views import minitoringLogin,Home,database,iaMossbauer
+from .views import minitoringLogin,Home,database,iaMossbauer,iaMossbauerRT
 
 
 urlpatterns = [
@@ -27,5 +27,6 @@ urlpatterns = [
     path('contactin/', Home().contactin, name='contactin'),
     path('search/', database().search_view, name='search'),
     path('iamodel/', iaMossbauer().modelIa, name='iamodel'),
+    path('iamodelrt/', iaMossbauerRT().modelIaRT, name='iamodelrt'),
 
 ]
