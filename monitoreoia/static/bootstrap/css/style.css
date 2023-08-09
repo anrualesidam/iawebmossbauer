@@ -53,6 +53,7 @@ footer.custom-footer {
   align-items: center;/* Set the height of the center wrapper to fill the viewport */
 }
 
+
 .chart-container {
   width: 100%; /* Use 100% width for responsiveness */
   max-width: 600px; /* Set a maximum width for larger screens */
@@ -77,4 +78,16 @@ footer.custom-footer {
     height: auto; /* Auto height for smaller screens */
     padding: 20px;
   }
+}
+
+
+
+
+.alexis {
+  text-align: justify;
+  width: 100%; 
+  max-width: 600px; 
+  height: 100%;
+  margin:0 auto;
+  padding: 20px;
 }
