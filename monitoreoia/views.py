@@ -42,12 +42,12 @@ class minitoringLogin:
            
                 self.password = request.POST.get('password')
             
-                user = authenticate(request, username=self.username, password=self.password)
+                user = authenticate(request, username=self.username.lower(), password=self.password)
 
-                context = {'contenido': self.username}
+                context = {'contenido': self.username.lower()}
                 if user is not None:
                     login(request, user)
-                    request.session['minitoring_username'] = self.username
+                    request.session['minitoring_username'] = self.username.lower()
                     return render(request, 'home.html', context)
                 else:
                     #messages.error(request, 'Nombre de usuario o contraseña incorrectos.')
