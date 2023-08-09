@@ -200,6 +200,11 @@ class database:
                                                             'data': data_points,
                                                             'dataspectral':data_vale,
                                                             'selectoption':[selected_option]})
+        else:
+             messages.success(request, f'Please enter the username and password again!')
+             return render(request, "uploadloging.html")
+             
+             
 
 
 class iaMossbauer:
