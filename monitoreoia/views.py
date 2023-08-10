@@ -290,3 +290,45 @@ class iaMossbauerRT:
             return render(request, 'iamossbauer_realtime.html', {
                 "message": "No File Selected"
             })
+
+
+class iaMossbauerRTL:
+    def modelIaRTL(self, request):
+
+        message = ""
+        prediction = ""
+        fss = CustomFileSystemStorage()
+        try:
+            # Load Model
+            model = tf.keras.models.load_model(
+                os.getcwd() + os.path.join(os.sep, "model", "Mossbauer_model.h5")
+            )
+
+            spectrum = request.FILES["file"]
+            print("Name", spectrum.file)
+            _spectrum = fss.save(spectrum.name, spectrum)
+            path = str(settings.MEDIA_ROOT) + "/" + spectrum.name
+            # read the spectrum
+            spec_ = -np.loadtxt(path, dtype=float, delimiter=',')
+            spec_ = spec_.T
+            spec_ = (spec_ - spec_.mean())/(spec_.std())
+            spec_ = spec_.tolist()
+
+            spectrum_pred = [spec_]
+            categ = ["Otro", "Hematita", "Magnetita"]
+            result = np.argmax(model.predict(spectrum_pred), axis=-1)
+
+            print("Prediction: " + str(np.argmax(result)))
+
+            prediction = categ[result[0]]
+
+            return render(request, 'iamossbauer_realtimeL.html', {
+                "message": message,
+                "spectrum": spectrum_pred,
+                "prediction": prediction
+            })
+
+        except MultiValueDictKeyError:
+            return render(request, 'iamossbauer_realtimeL.html', {
+                "message": "No File Selected"
+            })
