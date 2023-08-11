@@ -2,7 +2,7 @@
 
 ## Version
 
-1. Python 3.10.12
+1. Python 3.10.11
 
 # Installation
 
