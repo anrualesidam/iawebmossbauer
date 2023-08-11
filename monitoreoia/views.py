@@ -294,41 +294,118 @@ class iaMossbauerRT:
 
 class iaMossbauerRTL:
     def modelIaRTL(self, request):
+        # Datbase
+        ref = db.reference('database')
 
+        # model
         message = ""
         prediction = ""
-        fss = CustomFileSystemStorage()
-        try:
-            # Load Model
-            model = tf.keras.models.load_model(
-                os.getcwd() + os.path.join(os.sep, "model", "Mossbauer_model.h5")
-            )
 
-            spectrum = request.FILES["file"]
-            print("Name", spectrum.file)
-            _spectrum = fss.save(spectrum.name, spectrum)
-            path = str(settings.MEDIA_ROOT) + "/" + spectrum.name
-            # read the spectrum
-            spec_ = -np.loadtxt(path, dtype=float, delimiter=',')
-            spec_ = spec_.T
-            spec_ = (spec_ - spec_.mean())/(spec_.std())
-            spec_ = spec_.tolist()
+        # name user
+        minitoring_username = request.session.get('minitoring_username')
 
-            spectrum_pred = [spec_]
-            categ = ["Otro", "Hematita", "Magnetita"]
-            result = np.argmax(model.predict(spectrum_pred), axis=-1)
+        if minitoring_username:
+            User = get_user_model()
+            options = list(["None"])
+            try:
+                user = CustomUser.objects.get(username=minitoring_username)
+                user_id_to_delete = user.id
 
-            print("Prediction: " + str(np.argmax(result)))
+                data = ref.child(str(user_id_to_delete)).get()
+                try:
+                    options = list(data.keys())
+                except:
+                    options = list(["None"])
 
-            prediction = categ[result[0]]
+                data_points = []
+                selected_option = ""
+                data_vale = []
 
-            return render(request, 'iamossbauer_realtimeL.html', {
-                "message": message,
-                "spectrum": spectrum_pred,
-                "prediction": prediction
-            })
+                # Load Model
+                model = tf.keras.models.load_model(
+                    os.getcwd() + os.path.join(os.sep, "model", "Mossbauer_model.h5")
+                )
 
-        except MultiValueDictKeyError:
-            return render(request, 'iamossbauer_realtimeL.html', {
-                "message": "No File Selected"
-            })
+                if request.method == 'POST':
+
+                    try:
+                        selected_option = request.POST.get(
+                            'selected_option')
+                        datal = data[selected_option]
+                        primer_elemento = next(iter(datal.items()))
+                        clave, valor = primer_elemento
+
+                        
+
+                        data_vale = [int(number)
+                                     for number in valor.split(",")]
+                        
+                        print(len(data_vale))
+
+                        spec_ = -np.array(data_vale)
+                        spec_ = spec_.T
+                        spec_ = (spec_ - spec_.mean())/(spec_.std())
+                        spec_ = spec_.tolist()
+
+                        spectrum_pred = [spec_]
+                        categ = ["Otro", "Hematita", "Magnetita"]
+                        result = np.argmax(
+                            model.predict(spectrum_pred), axis=-1)
+
+                        print("Prediction: " + str(np.argmax(result)))
+
+                        prediction = categ[result[0]]
+
+                        for i in range(len(data_vale)):
+                            data_points.append({"x": i+1, "y": data_vale[i]})
+                    except:
+                        data_points = [{"x": 0, "y": 0}]
+                        pass
+
+                else:
+
+                    try:
+                        selected_option = options[0]
+                        datal = data[selected_option]
+                        primer_elemento = next(iter(datal.items()))
+                        clave, valor = primer_elemento
+
+                        data_vale = [int(number)
+                                     for number in valor.split(",")]
+                        
+                        print(len(data_vale))
+
+                        spec_ = -np.array(data_vale)
+                        spec_ = spec_.T
+                        spec_ = (spec_ - spec_.mean())/(spec_.std())
+                        spec_ = spec_.tolist()
+
+                        spectrum_pred = [spec_]
+                        categ = ["Otro", "Hematita", "Magnetita"]
+                        result = np.argmax(
+                            model.predict(spectrum_pred), axis=-1)
+
+                        print("Prediction: " + str(np.argmax(result)))
+
+                        prediction = categ[result[0]]
+
+
+                        for i in range(len(data_vale)):
+                            data_points.append({"x": i+1, "y": data_vale[i]})
+                    except:
+                        data_points = [{"x": 0, "y": 0}]
+                        pass
+
+            except User.DoesNotExist:
+                print("User with the specified email does not exist.")
+
+            return render(request, 'iamossbauer_realtimeL.html', {'options': options,
+                                                                  'selected_option': selected_option,
+                                                                  'data': data_points,
+                                                                  "prediction": prediction,
+                                                                  'dataspectral': data_vale,
+                                                                  'selectoption': [selected_option]})
+        else:
+            messages.success(
+                request, f'Please enter the username and password again!')
+            return render(request, "uploadloging.html")

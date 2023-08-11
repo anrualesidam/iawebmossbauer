@@ -3,68 +3,151 @@
 
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center">
+
+
+
+<div class="d-flex justify-content-center align-items-center containernew">
   <h2 class="mb-3">Welcome, {{ request.user.username }}!</h2>
 </div>
+<div class="d-flex justify-content-center align-items-center containernew">
+  <h1 class="text-center">Artificial Intelligence in Mössbauer Spectroscopy in Real Time Database</h1>
+</div>
 
-<div class="d-flex justify-content-center align-items-center">
-  <div>
 
+
+<div class="d-flex justify-content-center align-items-center containernew">
+  <div class="container text-center">
+    <div class="row align-items-start">
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="row" style="display: flex;
+          justify-content: center;
+          align-items: center;">
+
+          <div class="col-md-6">
+
+            <div class="form-group">
+
+              <select class="form-control" id="selected_option" name="selected_option">
+                {% for option in options %}
+                <option value="{{ option }}" {% if option == selected_option %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3 d-flex align-items-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button onclick="downloadData()" class="btn btn-secondary">Download</button>
+
+          </div>
+
+
+
+        </div>
+
+      </form>
+
+      <div class="wrapper">
+        <div class="info_container">
+          <ul>
+            <li>Prediction: <span class="name">{{ prediction }}</span></li>
+          </ul>
+        </div>
+      </div>
+
+
+      <div class="center-wrapper">
+        <div class="chart-container">
+          <canvas id="myChart"></canvas>
+        </div>
+
+
+        <script>
+          var ctx = document.getElementById('myChart').getContext('2d');
+          // Global Options
+
+          // Datos del gráfico
+          var data = {{ data| safe }};
+
+
+          function objectToString(obj) {
+            var str = JSON.stringify(obj);
+            return str.replace("_", '');
+          }
+
+          // Crear el gráfico
+          var myChart = new Chart(ctx, {
+            type: 'scatter', // Tipo de gráfico (puedes usar 'line', 'pie', 'doughnut', etc.)
+            data: {
+              datasets: [{
+                data: data,
+                lineTension: 1,
+                fill: false,
+                borderColor: 'red',
+                pointRadius: 1,
+                borderWidth: 2,
+                hoverBorderWidth: 3,
+              }]
+            },
+            options: {
+              title: {
+                display: true,
+                text: "Espectro Mössbauer",
+                fontSize: 20,
+                fontColor: "rgb(100,150,0)"
+              },
+              scales: {
+                xAxes: [{
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Canales'
+                  },
+                  ticks: {
+                    min: 0
+                  }
+
+                }],
+                yAxes: [{
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Cuentas'
+                  }
+                }]
+
+              },
+              legend: {
+                display: false
+              }
+
+            }
+          });
+
+          // Función para descargar los datos en un archivo txt
+          // Función para descargar los datos en un archivo txt
+
+          var datasapectrum = {{ dataspectral| safe }};
+          var selectopt = {{ selectoption| safe }};
+
+          function downloadData() {
+
+            var content = '{' + selectopt.map(objectToString) + ':[' + datasapectrum.map(objectToString) + ']}'; // Convertir objetos a cadenas de texto y unirlos
+
+            var blob = new Blob([content], { type: 'text/plain' }); // Crear un objeto Blob con el contenido del texto
+            var url = URL.createObjectURL(blob); // Crear una URL para el Blob
+            var a = document.createElement('a'); // Crear un elemento <a> para el enlace de descarga
+            a.href = url;
+            a.download = selectopt.map(objectToString) + '.json'; // Nombre del archivo a descargar
+            a.click(); // Simular el clic en el enlace para iniciar la descarga
+            URL.revokeObjectURL(url); // Liberar la URL del Blob después de la descarga
+          }
+
+        </script>
+
+      </div>
+    </div>
   </div>
 
 </div>
-
-<h1 class="text-center">Artificial Intelligence in Mössbauer Spectroscopy in Real Time</h1>
-
-<div class="container text-center">
-  <div class="row align-items-start">
-    <div class="col">
-
-      <img src="data:image/jpeg;base64,{{ img_path }}" alt="Plot" class="img-fluid">
-    </div>
-    <div class="col">
-
-      <img src="data:image/jpeg;base64,{{ img_ping }}" alt="Plot" class="img-fluid">
-    </div>
-
-    <div class="header">
-      <h1><span>Mossbauer Prediction Tool</span> </h1>
-    </div>
-
-    <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-      <input class="custom-file-upload" type="file" accept="file" name="file" id="file" />
-      <button class="compress_file" type="submit" id="submit">
-        Predict Mossbauer
-      </button>
-      <div class="status">
-        <p id="message">{{ message }}</p>
-      </div>
-    </form>
-
-    <div class="wrapper">
-      <div class="info_container">
-        <ul>
-          <li>Prediction: <span class="name">{{ prediction }}</span></li>
-        </ul>
-      </div>
-    </div>
-
-
-
-
-
-
-
-
-  </div>
-
-</div>
-<!--<div style="height: 30%; width: 30%;">
-    <img src="data:image/jpeg;base64,{{ img_path }}" alt="Plot" class="img-fluid">
-    <img src="data:image/jpeg;base64,{{ img_ping }}" alt="Plot" class="img-fluid">
-</div> -->
-
-
-
 {% endblock %}
