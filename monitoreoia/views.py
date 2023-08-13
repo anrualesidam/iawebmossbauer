@@ -203,6 +203,46 @@ class database:
                 request, f'Please enter the username and password again!')
             return render(request, "uploadloging.html")
 
+class realtimeconect:
+    def realtimeview(self, request):
+        firebase_database_url = "https://radiacion-c50d8.firebaseio.com"  # Coloca la URL correcta aquí
+        
+        return render(request, "raltimeconection.html", {"firebase_database_url": firebase_database_url})
+        """print("aqui estoy en real")
+
+
+        # Referencia a la ubicación de datos en tiempo real
+        refdata = db.reference('edison')  # Reemplaza con la ubicación real de tus datos
+
+    
+
+        # Función de manejo de cambios
+        datosrt=""
+        data_points = []
+        def handle_change(event):
+            nonlocal data_points          
+        
+            datosrt = str(event.data.get('datos', '')).replace(" ", "")
+           # print(datosrt)
+            if datosrt.endswith(","):
+                new_data= datosrt[:-1]
+            else:
+                new_data = datosrt
+            
+            data_vale = [int(number) for number in new_data.split(",")]
+            
+            data_points  = [{"x": i + 1, "y": data_vale[i]} for i in range(len(data_vale))]
+            #print("Después de la manipulación:", data_points)
+            return render(request, "raltimeconection.html", {'datalive': data_points})
+
+
+        a=refdata.listen(handle_change)
+        
+        print("data_point: ",a)
+        
+        return render(request, "raltimeconection.html", {'datalive': data_points})"""
+
+
 
 class CustomFileSystemStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
@@ -295,6 +335,7 @@ class iaMossbauerRT:
 class iaMossbauerRTL:
     def modelIaRTL(self, request):
         # Datbase
+        print("aqui estoy")
         ref = db.reference('database')
 
         # model
