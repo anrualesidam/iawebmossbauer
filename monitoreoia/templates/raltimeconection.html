@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+
+<script src="https://www.gstatic.com/firebasejs/6.2.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-database.js"></script>
+<div class="d-flex justify-content-center align-items-center containernew">
+  <h5 class="mb-3">Welcome, {{ request.user.username }}!</h5>
+</div>
+<div class="d-flex justify-content-center align-items-center containernew">
+  <h2 class="text-center">Real-time Mössbauer spectal</h2>
+</div>
+
+
+
+<div class="d-flex justify-content-center align-items-center containernew">
+  <div class="container text-center">
+    <div class="row align-items-start">
+
+      <div class="center-wrapper">
+        <div class="chart-container">
+          <canvas id="myChart"></canvas>
+      </div>
+
+      
+
+
+        <script>
+
+          var firebaseConfig = {
+            databaseURL: "{{ firebase_database_url }}",
+          };
+          firebase.initializeApp(firebaseConfig);		
+        </script>
+        <script>
+          var a = document.createElement('a');
+          var ref = firebase.database().ref();
+          
+          ref.child("edison/datos").on("value",function(snapshot){
+          //console.log(snapshot.val())
+          var numero=snapshot.val();
+          var texto = numero.split(",").join("\n"); 
+          var max= 0;
+          var min= 100000000;
+          function datos(valor){
+            var a=valor.split(",");
+            //console.log(a);
+            
+            var h=[];
+            for (var i=0; i<a.length-1;i++){
+              h.push({'x':i+1,'y':parseInt(a[i])})
+              if (parseInt(a[i]) < min) {
+                min= parseInt(a[i]);
+                }
+              if  (parseInt(a[i]) > max){ 
+                max= parseInt(a[i]);
+              }
+            }
+            console.log(h);
+            return [h,min,max];
+          }
+          
+          let myChart = document.getElementById('myChart').getContext('2d');
+      
+          // Global Options
+          Chart.defaults.global.defaultFontFamily = 'Lato';
+          Chart.defaults.global.defaultFontSize = 18;
+          
+          let massPopChart = new Chart(myChart, {
+            type:'scatter',
+            data:{
+              datasets:[{
+                data:datos(numero)[0],
+                lineTension:0,
+                fill: false,
+                borderColor: 'red',
+                pointRadius:0,
+                borderWidth:2,
+                hoverBorderWidth:3,
+              }]
+            },
+            options:{
+              title:{
+                display:true,
+                text:'Espectro Mössbauer',
+                fontSize:30,
+                fontColor:"rgb(100,150,0)"
+              },
+              scales:{
+                xAxes:[{
+                  scaleLabel:{
+                    display: true,
+                    labelString: 'Canales'
+                  },
+                  ticks:{
+                    min:0,
+                    stepSize: 50
+                  }
+      
+                }],
+                yAxes:[{
+                  scaleLabel:{
+                    display:true,
+                    labelString:'Cuentas'
+                  }
+                }]
+      
+              },
+              legend:{
+                display:false,
+              },
+            }
+          });
+        })
+        </script>
+
+      </div>
+
+
+      
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="d-flex justify-content-center align-items-center containernew">
+  <a href="{% url 'search' %}" class="btn btn-primary ms-3">Spectral Search</a>
+</div>
+
+<div class="container text-center">
+  <div class="row align-items-start">
+    <div style="display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;">
+  </div>
+  </div>
+{% endblock %}

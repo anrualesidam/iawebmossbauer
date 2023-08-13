@@ -7,7 +7,7 @@
 
 
 <div class="d-flex justify-content-center align-items-center containernew">
-  <h2 class="mb-3">Welcome, {{ request.user.username }}!</h2>
+  <h5 class="mb-3">Welcome, {{ request.user.username }}!</h5>
 </div>
 <div class="d-flex justify-content-center align-items-center containernew">
   <h1 class="text-center">Mössbauer spectal searchs</h1>
@@ -39,9 +39,13 @@
           </div>
           <div class="col-md-3 d-flex align-items-center">
             <button type="submit" class="btn btn-primary">Submit</button>
-            <button onclick="downloadData()" class="btn btn-secondary">Download</button>
-
+            <div class="col-md-3 d-flex align-items-center">            
+              <button onclick="downloadData()" class="btn btn-secondary">Download</button>
+              
+            </div>
           </div>
+
+          
 
         </div>
 
@@ -95,7 +99,8 @@
                     labelString: 'Canales'
                   },
                   ticks: {
-                    min: 0
+                    min: 0,
+                    stepSize: 50
                   }
 
                 }],
